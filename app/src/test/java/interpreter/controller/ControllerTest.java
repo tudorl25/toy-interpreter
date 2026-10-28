@@ -7,12 +7,12 @@ import interpreter.model.PrgState;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.adt.MyList;
 import interpreter.model.adt.MyStack;
-import interpreter.model.exp.VarExp;
-import interpreter.model.stmt.AssignStmt;
-import interpreter.model.stmt.CompStmt;
-import interpreter.model.stmt.IStmt;
-import interpreter.model.stmt.NopStmt;
-import interpreter.model.stmt.PrintStmt;
+import interpreter.model.expression.VariableExpression;
+import interpreter.model.statement.AssignmentStatement;
+import interpreter.model.statement.ComparisonStatement;
+import interpreter.model.statement.IStatement;
+import interpreter.model.statement.NopStatement;
+import interpreter.model.statement.PrintStatement;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
@@ -29,11 +29,11 @@ import static interpreter.TestSupport.num;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
-    private static PrgState newState(IStmt program) {
+    private static PrgState newState(IStatement program) {
         return new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), program);
     }
 
-    private static PrgState run(IStmt program) throws MyException {
+    private static PrgState run(IStatement program) throws MyException {
         PrgState state = newState(program);
         new Controller(new Repository(state), false).allStep(); // display off
         return state;
@@ -76,7 +76,7 @@ class ControllerTest {
 
     @Test
     void outKeepsTheValuesInThePrintOrder() throws MyException {
-        IStmt program = new CompStmt(new PrintStmt(num(1)), new CompStmt(new PrintStmt(num(2)), new PrintStmt(num(3))));
+        IStatement program = new ComparisonStatement(new PrintStatement(num(1)), new ComparisonStatement(new PrintStatement(num(2)), new PrintStatement(num(3))));
         PrgState state = run(program);
         assertEquals("{1, 2, 3}", state.getOut().toString());
     }
@@ -91,7 +91,7 @@ class ControllerTest {
 
     @Test
     void aFurtherStepAfterTheEndOfTheExecutionThrows() throws MyException {
-        PrgState state = newState(new NopStmt());
+        PrgState state = newState(new NopStatement());
         Controller controller = new Controller(new Repository(state), false);
         controller.allStep();
         assertThrows(StatementException.class, () -> controller.oneStep(state));
@@ -110,13 +110,13 @@ class ControllerTest {
 
     @Test
     void oneStepReturnsTheState() throws MyException {
-        PrgState state = newState(new NopStmt());
+        PrgState state = newState(new NopStatement());
         assertSame(state, new Controller(new Repository(state), false).oneStep(state));
     }
 
     @Test
     void anErrorInTheProgramStopsTheExecution() {
-        PrgState state = newState(new CompStmt(new AssignStmt("x", num(1)), new PrintStmt(num(9))));
+        PrgState state = newState(new ComparisonStatement(new AssignmentStatement("x", num(1)), new PrintStatement(num(9))));
         Controller controller = new Controller(new Repository(state), false);
         assertThrows(StatementException.class, controller::allStep);
         assertEquals(0, state.getOut().size());
@@ -124,7 +124,7 @@ class ControllerTest {
 
     @Test
     void anExpressionErrorInTheProgramIsReported() {
-        PrgState state = newState(new PrintStmt(new VarExp("undefined")));
+        PrgState state = newState(new PrintStatement(new VariableExpression("undefined")));
         Controller controller = new Controller(new Repository(state), false);
         assertThrows(ExpressionException.class, controller::allStep);
     }

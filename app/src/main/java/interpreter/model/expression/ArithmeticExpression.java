@@ -1,4 +1,4 @@
-package interpreter.model.exp;
+package interpreter.model.expression;
 
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
@@ -6,8 +6,8 @@ import interpreter.model.adt.IDictionary;
 import interpreter.model.value.IntValue;
 import interpreter.model.value.IValue;
 
-/** Rule E3: + - * / on two integers. */
-public record ArithExp(ArithOp op, IExp left, IExp right) implements IExp {
+
+public record ArithmeticExpression(ArithmeticOperand op, IExpression left, IExpression right) implements IExpression {
     @Override
     public IValue eval(IDictionary<String, IValue> symTable) throws MyException {
         if (!(left.eval(symTable) instanceof IntValue(int n1)))

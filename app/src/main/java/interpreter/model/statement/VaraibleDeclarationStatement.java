@@ -1,4 +1,4 @@
-package interpreter.model.stmt;
+package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
@@ -6,7 +6,7 @@ import interpreter.model.PrgState;
 import interpreter.model.type.IType;
 
 /** Rule S3: Type Id -> add Id -> default(Type) to the symbol table. */
-public record VarDeclStmt(String name, IType type) implements IStmt {
+public record VaraibleDeclarationStatement(String name, IType type) implements IStatement {
     @Override
     public PrgState execute(PrgState state) throws MyException {
         var symTable = state.getSymTable();

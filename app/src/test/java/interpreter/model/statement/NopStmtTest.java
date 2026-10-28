@@ -1,4 +1,4 @@
-package interpreter.model.stmt;
+package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.model.PrgState;
@@ -11,7 +11,7 @@ class NopStmtTest {
     @Test
     void changesNothingInTheState() throws MyException {
         PrgState state = emptyState();
-        PrgState result = new NopStmt().execute(state);
+        PrgState result = new NopStatement().execute(state);
         assertSame(state, result);
         assertTrue(state.getExeStack().isEmpty());
         assertEquals("{}", state.getSymTable().toString());
@@ -20,6 +20,6 @@ class NopStmtTest {
 
     @Test
     void toStringIsNop() {
-        assertEquals("nop", new NopStmt().toString());
+        assertEquals("nop", new NopStatement().toString());
     }
 }

@@ -1,9 +1,9 @@
-package interpreter.model.stmt;
+package interpreter.model.statement;
 
 import interpreter.model.PrgState;
 
-/** Rule S6: nop -> nothing happens. */
-public record NopStmt() implements IStmt {
+
+public record NopStatement() implements IStatement {
     @Override
     public PrgState execute(PrgState state) {
         return state;

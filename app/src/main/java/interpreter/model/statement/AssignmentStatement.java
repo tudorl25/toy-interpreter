@@ -1,13 +1,13 @@
-package interpreter.model.stmt;
+package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
-import interpreter.model.exp.IExp;
+import interpreter.model.expression.IExpression;
 import interpreter.model.value.IValue;
 
 /** Rule S2: Id = Exp -> evaluate Exp and update Id in the symbol table. */
-public record AssignStmt(String id, IExp exp) implements IStmt {
+public record AssignmentStatement(String id, IExpression exp) implements IStatement {
     @Override
     public PrgState execute(PrgState state) throws MyException {
         var symTable = state.getSymTable();

@@ -1,4 +1,4 @@
-package interpreter.model.exp;
+package interpreter.model.expression;
 
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
@@ -15,16 +15,16 @@ class ValueExpTest {
 
     @Test
     void evaluatesToItsIntegerValue() throws MyException {
-        assertEquals(new IntValue(42), new ValueExp(new IntValue(42)).eval(symTable));
+        assertEquals(new IntValue(42), new ValueExpression(new IntValue(42)).eval(symTable));
     }
 
     @Test
     void evaluatesToItsBooleanValue() throws MyException {
-        assertEquals(new BoolValue(true), new ValueExp(new BoolValue(true)).eval(symTable));
+        assertEquals(new BoolValue(true), new ValueExpression(new BoolValue(true)).eval(symTable));
     }
 
     @Test
     void toStringShowsTheValue() {
-        assertEquals("42", new ValueExp(new IntValue(42)).toString());
+        assertEquals("42", new ValueExpression(new IntValue(42)).toString());
     }
 }

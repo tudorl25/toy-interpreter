@@ -1,4 +1,4 @@
-package interpreter.model.stmt;
+package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.model.PrgState;
@@ -9,7 +9,7 @@ import static interpreter.TestSupport.emptyState;
 import static interpreter.TestSupport.num;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CompStmtTest {
+class ComparisonStatementTest {
     private PrgState state;
 
     @BeforeEach
@@ -19,9 +19,9 @@ class CompStmtTest {
 
     @Test
     void pushesTheSecondStatementThenTheFirstSoTheFirstIsOnTop() throws MyException {
-        IStmt first = new NopStmt();
-        IStmt second = new PrintStmt(num(1));
-        new CompStmt(first, second).execute(state);
+        IStatement first = new NopStatement();
+        IStatement second = new PrintStatement(num(1));
+        new ComparisonStatement(first, second).execute(state);
         assertSame(first, state.getExeStack().pop());
         assertSame(second, state.getExeStack().pop());
         assertTrue(state.getExeStack().isEmpty());
@@ -29,14 +29,14 @@ class CompStmtTest {
 
     @Test
     void doesNotChangeSymTableOrOut() throws MyException {
-        new CompStmt(new NopStmt(), new NopStmt()).execute(state);
+        new ComparisonStatement(new NopStatement(), new NopStatement()).execute(state);
         assertEquals("{}", state.getSymTable().toString());
         assertEquals(0, state.getOut().size());
     }
 
     @Test
     void toStringHasNoOuterParenthesesButNestedCompoundsHaveThem() {
-        IStmt s = new CompStmt(new NopStmt(), new CompStmt(new NopStmt(), new NopStmt()));
+        IStatement s = new ComparisonStatement(new NopStatement(), new ComparisonStatement(new NopStatement(), new NopStatement()));
         assertEquals("nop; (nop; nop)", s.toString());
     }
 }

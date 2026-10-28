@@ -1,9 +1,9 @@
-package interpreter.model.stmt;
+package interpreter.model.statement;
 
 import interpreter.model.PrgState;
 
 /** Rule S1: Stmt1; Stmt2 -> push Stmt2, then Stmt1 (so Stmt1 is executed first). */
-public record CompStmt(IStmt first, IStmt second) implements IStmt {
+public record ComparisonStatement(IStatement first, IStatement second) implements IStatement {
     @Override
     public PrgState execute(PrgState state) {
         state.getExeStack().push(second);
@@ -14,6 +14,6 @@ public record CompStmt(IStmt first, IStmt second) implements IStmt {
     /** The outermost level has no parentheses: {int v | v = 2; print(v)}; nested compounds do. */
     @Override
     public String toString() {
-        return StmtFormat.nested(first) + "; " + StmtFormat.nested(second);
+        return StatementFormat.nested(first) + "; " + StatementFormat.nested(second);
     }
 }

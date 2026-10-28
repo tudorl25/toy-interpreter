@@ -1,4 +1,4 @@
-package interpreter.model.exp;
+package interpreter.model.expression;
 
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
@@ -6,7 +6,7 @@ import interpreter.model.adt.IDictionary;
 import interpreter.model.value.IValue;
 
 /** Rule E2: the value of a variable is looked up in the symbol table. */
-public record VarExp(String id) implements IExp {
+public record VariableExpression(String id) implements IExpression {
     @Override
     public IValue eval(IDictionary<String, IValue> symTable) throws MyException {
         if (!symTable.isDefined(id))

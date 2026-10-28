@@ -1,11 +1,11 @@
-package interpreter.model.exp;
+package interpreter.model.expression;
 
-public enum ArithOp {
+public enum ArithmeticOperand {
     ADD("+"), SUB("-"), MUL("*"), DIV("/");
 
     private final String symbol;
 
-    ArithOp(String symbol) {
+    ArithmeticOperand(String symbol) {
         this.symbol = symbol;
     }
 

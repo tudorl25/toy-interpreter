@@ -1,4 +1,4 @@
-package interpreter.model.exp;
+package interpreter.model.expression;
 
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
@@ -7,7 +7,7 @@ import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 
 /** Rule E4: and / or on two booleans (both operands are always evaluated, left first). */
-public record LogicExp(LogicOp op, IExp left, IExp right) implements IExp {
+public record LogicExpression(LogicOperand op, IExpression left, IExpression right) implements IExpression {
     @Override
     public IValue eval(IDictionary<String, IValue> symTable) throws MyException {
         if (!(left.eval(symTable) instanceof BoolValue(boolean b1)))

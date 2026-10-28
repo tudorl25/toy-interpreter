@@ -1,13 +1,12 @@
-package interpreter.model.stmt;
+package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
-import interpreter.model.exp.IExp;
+import interpreter.model.expression.IExpression;
 import interpreter.model.value.BoolValue;
 
-/** Rule S5: if Exp then S1 else S2 -> push S1 if Exp is true, otherwise S2. */
-public record IfStmt(IExp cond, IStmt thenS, IStmt elseS) implements IStmt {
+public record IfStatement(IExpression cond, IStatement thenS, IStatement elseS) implements IStatement {
     @Override
     public PrgState execute(PrgState state) throws MyException {
         if (!(cond.eval(state.getSymTable()) instanceof BoolValue(boolean c)))
@@ -18,6 +17,6 @@ public record IfStmt(IExp cond, IStmt thenS, IStmt elseS) implements IStmt {
 
     @Override
     public String toString() {
-        return "(if " + cond + " then " + StmtFormat.nested(thenS) + " else " + StmtFormat.nested(elseS) + ")";
+        return "(if " + cond + " then " + StatementFormat.nested(thenS) + " else " + StatementFormat.nested(elseS) + ")";
     }
 }

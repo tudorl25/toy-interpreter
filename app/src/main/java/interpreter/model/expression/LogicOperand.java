@@ -1,11 +1,11 @@
-package interpreter.model.exp;
+package interpreter.model.expression;
 
-public enum LogicOp {
+public enum LogicOperand {
     AND("and"), OR("or");
 
     private final String symbol;
 
-    LogicOp(String symbol) {
+    LogicOperand(String symbol) {
         this.symbol = symbol;
     }
 

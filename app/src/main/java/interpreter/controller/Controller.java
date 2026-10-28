@@ -3,7 +3,7 @@ package interpreter.controller;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
-import interpreter.model.stmt.IStmt;
+import interpreter.model.statement.IStatement;
 import interpreter.repository.IRepository;
 
 import java.io.PrintStream;
@@ -27,7 +27,7 @@ public class Controller {
     public PrgState oneStep(PrgState state) throws MyException {
         var stack = state.getExeStack();
         if (stack.isEmpty()) throw new StatementException("execution stack is empty");
-        IStmt crtStmt = stack.pop();
+        IStatement crtStmt = stack.pop();
         return crtStmt.execute(state);
     }
 
