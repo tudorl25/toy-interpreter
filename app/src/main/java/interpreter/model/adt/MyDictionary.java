@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MyDictionary<K, V> implements IDictionary<K, V> {
-    // a HashMap that remembers the insertion order, so the displayed states are deterministic
+
     private final Map<K, V> map = new LinkedHashMap<>();
 
     @Override
@@ -31,8 +31,6 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
         if (!map.containsKey(key)) throw new ADTException("key " + key + " is not defined");
         map.put(key, value);
     }
-
-    /** As in the lab notation: {v -> 2, a -> false}. */
     @Override
     public String toString() {
         return map.entrySet().stream()

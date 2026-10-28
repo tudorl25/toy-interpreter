@@ -5,6 +5,5 @@ import interpreter.model.adt.IDictionary;
 import interpreter.model.value.IValue;
 
 public interface IExpression {
-    /** Evaluates the expression against the symbol table; never changes the program state. */
     IValue eval(IDictionary<String, IValue> symTable) throws MyException;
 }

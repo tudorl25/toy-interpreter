@@ -7,7 +7,7 @@ import java.util.Deque;
 import java.util.stream.Collectors;
 
 public class MyStack<T> implements IStack<T> {
-    private final Deque<T> stack = new ArrayDeque<>(); // java.util; the head of the deque is the top
+    private final Deque<T> stack = new ArrayDeque<>();
 
     @Override
     public void push(T v) {
@@ -25,7 +25,6 @@ public class MyStack<T> implements IStack<T> {
         return stack.isEmpty();
     }
 
-    /** Top first, as in the lab notation: {s1 | s2 | s3}. */
     @Override
     public String toString() {
         return stack.stream().map(String::valueOf).collect(Collectors.joining(" | ", "{", "}"));

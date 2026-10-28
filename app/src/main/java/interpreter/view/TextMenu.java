@@ -2,7 +2,7 @@ package interpreter.view;
 
 import interpreter.controller.Controller;
 import interpreter.exceptions.MyException;
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.adt.MyList;
 import interpreter.model.adt.MyStack;
@@ -18,7 +18,7 @@ public class TextMenu {
     private final List<IStatement> programs;
     private final Scanner in;
     private final PrintStream out;
-    private int selected = -1; // index into programs; -1 = nothing selected yet
+    private int selected = -1;
 
     public TextMenu(List<IStatement> programs, InputStream input, PrintStream out) {
         this.programs = programs;
@@ -30,7 +30,7 @@ public class TextMenu {
         while (true) {
             printMenu();
             String line = readLine();
-            if (line == null) return; // end of input
+            if (line == null) return;
             switch (line.trim()) {
                 case "1" -> selectProgram();
                 case "2" -> runSelectedProgram();
@@ -79,7 +79,7 @@ public class TextMenu {
             out.println("No program selected. Choose option 1 first.");
             return;
         }
-        PrgState state = new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(),
+        ProgramState state = new ProgramState(new MyStack<>(), new MyDictionary<>(), new MyList<>(),
                 programs.get(selected));
         Controller controller = new Controller(new Repository(state), true, out);
         out.println();

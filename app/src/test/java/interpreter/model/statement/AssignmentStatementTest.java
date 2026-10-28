@@ -3,7 +3,7 @@ package interpreter.model.statement;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 import interpreter.model.expression.ArithmeticExpression;
 import interpreter.model.expression.ArithmeticOperand;
 import interpreter.model.expression.VariableExpression;
@@ -20,7 +20,7 @@ import static interpreter.TestSupport.num;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AssignmentStatementTest {
-    private PrgState state;
+    private ProgramState state;
 
     @BeforeEach
     void setUp() throws MyException {

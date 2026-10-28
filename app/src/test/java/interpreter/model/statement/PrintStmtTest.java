@@ -2,7 +2,7 @@ package interpreter.model.statement;
 
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 import interpreter.model.expression.VariableExpression;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
@@ -15,7 +15,7 @@ import static interpreter.TestSupport.num;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PrintStmtTest {
-    private PrgState state;
+    private ProgramState state;
 
     @BeforeEach
     void setUp() {

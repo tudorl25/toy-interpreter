@@ -1,20 +1,19 @@
 package interpreter.repository;
 
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Repository implements IRepository {
-    // a list, because later the repository will hold the states of several threads
-    private final List<PrgState> states = new ArrayList<>();
+    private final List<ProgramState> states = new ArrayList<>();
 
-    public Repository(PrgState initialState) {
+    public Repository(ProgramState initialState) {
         states.add(initialState);
     }
 
     @Override
-    public PrgState getCrtPrg() {
+    public ProgramState getCurrentProgram() {
         return states.get(0);
     }
 }

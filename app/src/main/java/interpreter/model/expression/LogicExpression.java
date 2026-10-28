@@ -6,7 +6,6 @@ import interpreter.model.adt.IDictionary;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 
-/** Rule E4: and / or on two booleans (both operands are always evaluated, left first). */
 public record LogicExpression(LogicOperand op, IExpression left, IExpression right) implements IExpression {
     @Override
     public IValue eval(IDictionary<String, IValue> symTable) throws MyException {

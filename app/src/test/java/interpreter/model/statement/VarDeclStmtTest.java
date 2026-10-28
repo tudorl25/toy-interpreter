@@ -2,7 +2,7 @@ package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 import interpreter.model.type.BoolType;
 import interpreter.model.type.IntType;
 import interpreter.model.value.BoolValue;
@@ -14,7 +14,7 @@ import static interpreter.TestSupport.emptyState;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VarDeclStmtTest {
-    private PrgState state;
+    private ProgramState state;
 
     @BeforeEach
     void setUp() {

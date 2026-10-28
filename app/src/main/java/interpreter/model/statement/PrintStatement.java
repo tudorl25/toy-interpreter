@@ -1,13 +1,13 @@
 package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 import interpreter.model.expression.IExpression;
 
-/** Rule S4: print(Exp) -> append Eval(Exp) to Out. */
+
 public record PrintStatement(IExpression exp) implements IStatement {
     @Override
-    public PrgState execute(PrgState state) throws MyException {
+    public ProgramState execute(ProgramState state) throws MyException {
         state.getOut().add(exp.eval(state.getSymTable()));
         return state;
     }

@@ -1,7 +1,7 @@
 package interpreter.repository;
 
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 
 public interface IRepository {
-    PrgState getCrtPrg();
+    ProgramState getCurrentProgram();
 }

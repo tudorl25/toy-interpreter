@@ -1,11 +1,11 @@
 package interpreter.model.statement;
 
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 
 
 public record NopStatement() implements IStatement {
     @Override
-    public PrgState execute(PrgState state) {
+    public ProgramState execute(ProgramState state) {
         return state;
     }
 

@@ -6,16 +6,14 @@ import interpreter.model.adt.IStack;
 import interpreter.model.statement.IStatement;
 import interpreter.model.value.IValue;
 
-/** The state of one executed program: ExeStack, SymTable and Out (plus the original program). */
-public class PrgState {
+public class ProgramState {
     private IStack<IStatement> exeStack;
     private IDictionary<String, IValue> symTable;
     private IList<IValue> out;
     private final IStatement originalProgram; // statements are immutable records, so no deep copy is needed
 
-    /** Initially the execution stack contains the whole program; SymTable and Out are as given (empty). */
-    public PrgState(IStack<IStatement> exeStack, IDictionary<String, IValue> symTable,
-                    IList<IValue> out, IStatement program) {
+    public ProgramState(IStack<IStatement> exeStack, IDictionary<String, IValue> symTable,
+                        IList<IValue> out, IStatement program) {
         this.exeStack = exeStack;
         this.symTable = symTable;
         this.out = out;

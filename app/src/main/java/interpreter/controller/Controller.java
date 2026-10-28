@@ -2,14 +2,14 @@ package interpreter.controller;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 import interpreter.model.statement.IStatement;
 import interpreter.repository.IRepository;
 
 import java.io.PrintStream;
 
 public class Controller {
-    private final IRepository repo; // interface type: the implementation can be replaced
+    private final IRepository repo;
     private final boolean displayFlag;
     private final PrintStream display;
 
@@ -23,17 +23,15 @@ public class Controller {
         this.display = display;
     }
 
-    /** Executes the statement on top of the ExeStack (one rule S1-S6); rule S7 if the stack is empty. */
-    public PrgState oneStep(PrgState state) throws MyException {
+    public ProgramState oneStep(ProgramState state) throws MyException {
         var stack = state.getExeStack();
         if (stack.isEmpty()) throw new StatementException("execution stack is empty");
         IStatement crtStmt = stack.pop();
         return crtStmt.execute(state);
     }
 
-    /** Executes the current program until its ExeStack is empty. */
     public void allStep() throws MyException {
-        PrgState prg = repo.getCrtPrg();
+        ProgramState prg = repo.getCurrentProgram();
         display(prg); // only if the display flag is on
         while (!prg.getExeStack().isEmpty()) {
             oneStep(prg);
@@ -41,7 +39,7 @@ public class Controller {
         }
     }
 
-    private void display(PrgState state) {
+    private void display(ProgramState state) {
         if (displayFlag) {
             display.println(state);
             display.println();

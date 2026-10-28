@@ -1,9 +1,9 @@
 package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
-import interpreter.model.PrgState;
+import interpreter.model.ProgramState;
 
 public interface IStatement {
 
-    PrgState execute(PrgState state) throws MyException;
+    ProgramState execute(ProgramState state) throws MyException;
 }
