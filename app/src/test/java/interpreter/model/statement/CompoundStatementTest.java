@@ -1,7 +1,7 @@
 package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
-import interpreter.model.ProgramState;
+import interpreter.model.PrgState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +10,7 @@ import static interpreter.TestSupport.num;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CompoundStatementTest {
-    private ProgramState state;
+    private PrgState state;
 
     @BeforeEach
     void setUp() {

@@ -6,14 +6,14 @@ import interpreter.model.adt.IStack;
 import interpreter.model.statement.IStatement;
 import interpreter.model.value.IValue;
 
-public class ProgramState {
+public class PrgState {
     private IStack<IStatement> exeStack;
     private IDictionary<String, IValue> symTable;
     private IList<IValue> out;
     private final IStatement originalProgram; // statements are immutable records, so no deep copy is needed
 
-    public ProgramState(IStack<IStatement> exeStack, IDictionary<String, IValue> symTable,
-                        IList<IValue> out, IStatement program) {
+    public PrgState(IStack<IStatement> exeStack, IDictionary<String, IValue> symTable,
+                    IList<IValue> out, IStatement program) {
         this.exeStack = exeStack;
         this.symTable = symTable;
         this.out = out;

@@ -3,7 +3,7 @@ package interpreter.model.statement;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.ProgramState;
+import interpreter.model.PrgState;
 import interpreter.model.expression.VariableExpression;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IfStatementTest {
     private final IStatement thenS = new PrintStatement(num(1));
     private final IStatement elseS = new PrintStatement(num(2));
-    private ProgramState state;
+    private PrgState state;
 
     @BeforeEach
     void setUp() {

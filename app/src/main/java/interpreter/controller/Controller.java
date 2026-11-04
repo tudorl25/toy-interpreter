@@ -2,7 +2,7 @@ package interpreter.controller;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.ProgramState;
+import interpreter.model.PrgState;
 import interpreter.model.statement.IStatement;
 import interpreter.repository.IRepository;
 
@@ -23,7 +23,7 @@ public class Controller {
         this.display = display;
     }
 
-    public ProgramState oneStep(ProgramState state) throws MyException {
+    public PrgState oneStep(PrgState state) throws MyException {
         var stack = state.getExeStack();
         if (stack.isEmpty()) throw new StatementException("execution stack is empty");
         IStatement crtStmt = stack.pop();
@@ -31,7 +31,7 @@ public class Controller {
     }
 
     public void allStep() throws MyException {
-        ProgramState prg = repo.getCurrentProgram();
+        PrgState prg = repo.getCurrentProgram();
         display(prg); // only if the display flag is on
         while (!prg.getExeStack().isEmpty()) {
             oneStep(prg);
@@ -39,7 +39,7 @@ public class Controller {
         }
     }
 
-    private void display(ProgramState state) {
+    private void display(PrgState state) {
         if (displayFlag) {
             display.println(state);
             display.println();

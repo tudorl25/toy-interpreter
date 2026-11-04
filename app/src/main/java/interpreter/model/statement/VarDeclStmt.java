@@ -2,12 +2,12 @@ package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.ProgramState;
+import interpreter.model.PrgState;
 import interpreter.model.type.IType;
 
-public record VaraibleDeclarationStatement(String name, IType type) implements IStatement {
+public record VarDeclStmt(String name, IType type) implements IStatement {
     @Override
-    public ProgramState execute(ProgramState state) throws MyException {
+    public PrgState execute(PrgState state) throws MyException {
         var symTable = state.getSymTable();
         if (symTable.isDefined(name))
             throw new StatementException("variable " + name + " is already declared");

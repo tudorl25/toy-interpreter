@@ -3,7 +3,7 @@ package interpreter.model.statement;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.ProgramState;
+import interpreter.model.PrgState;
 import interpreter.model.expression.ArithmeticExpression;
 import interpreter.model.expression.ArithmeticOperand;
 import interpreter.model.expression.VariableExpression;
@@ -20,13 +20,13 @@ import static interpreter.TestSupport.num;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AssignmentStatementTest {
-    private ProgramState state;
+    private PrgState state;
 
     @BeforeEach
     void setUp() throws MyException {
         state = emptyState();
-        new VaraibleDeclarationStatement("v", new IntType()).execute(state);
-        new VaraibleDeclarationStatement("b", new BoolType()).execute(state);
+        new VarDeclStmt("v", new IntType()).execute(state);
+        new VarDeclStmt("b", new BoolType()).execute(state);
     }
 
     @Test

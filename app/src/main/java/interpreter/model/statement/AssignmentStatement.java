@@ -2,13 +2,13 @@ package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
-import interpreter.model.ProgramState;
+import interpreter.model.PrgState;
 import interpreter.model.expression.IExpression;
 import interpreter.model.value.IValue;
 
 public record AssignmentStatement(String id, IExpression exp) implements IStatement {
     @Override
-    public ProgramState execute(ProgramState state) throws MyException {
+    public PrgState execute(PrgState state) throws MyException {
         var symTable = state.getSymTable();
         if (!symTable.isDefined(id))
             throw new StatementException("variable " + id + " was not declared");

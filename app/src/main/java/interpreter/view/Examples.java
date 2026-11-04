@@ -9,7 +9,7 @@ import interpreter.model.statement.CompoundStatement;
 import interpreter.model.statement.IStatement;
 import interpreter.model.statement.IfStatement;
 import interpreter.model.statement.PrintStatement;
-import interpreter.model.statement.VaraibleDeclarationStatement;
+import interpreter.model.statement.VarDeclStmt;
 import interpreter.model.type.BoolType;
 import interpreter.model.type.IntType;
 import interpreter.model.value.BoolValue;
@@ -22,13 +22,13 @@ public final class Examples {
     }
 
     
-    public static final IStatement EX1 = new CompoundStatement(new VaraibleDeclarationStatement("v", new IntType()),
+    public static final IStatement EX1 = new CompoundStatement(new VarDeclStmt("v", new IntType()),
             new CompoundStatement(new AssignmentStatement("v", new ValueExpression(new IntValue(2))),
                     new PrintStatement(new VariableExpression("v"))));
 
     
-    public static final IStatement EX2 = new CompoundStatement(new VaraibleDeclarationStatement("a", new IntType()),
-            new CompoundStatement(new VaraibleDeclarationStatement("b", new IntType()),
+    public static final IStatement EX2 = new CompoundStatement(new VarDeclStmt("a", new IntType()),
+            new CompoundStatement(new VarDeclStmt("b", new IntType()),
                     new CompoundStatement(new AssignmentStatement("a",
                             new ArithmeticExpression(ArithmeticOperand.ADD, new ValueExpression(new IntValue(2)),
                                     new ArithmeticExpression(ArithmeticOperand.MUL, new ValueExpression(new IntValue(3)),
@@ -39,8 +39,8 @@ public final class Examples {
                                     new PrintStatement(new VariableExpression("b"))))));
 
     
-    public static final IStatement EX3 = new CompoundStatement(new VaraibleDeclarationStatement("a", new BoolType()),
-            new CompoundStatement(new VaraibleDeclarationStatement("v", new IntType()),
+    public static final IStatement EX3 = new CompoundStatement(new VarDeclStmt("a", new BoolType()),
+            new CompoundStatement(new VarDeclStmt("v", new IntType()),
                     new CompoundStatement(new AssignmentStatement("a", new ValueExpression(new BoolValue(true))),
                             new CompoundStatement(new IfStatement(new VariableExpression("a"),
                                     new AssignmentStatement("v", new ValueExpression(new IntValue(2))),

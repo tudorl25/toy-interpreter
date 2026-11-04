@@ -1,13 +1,13 @@
 package interpreter.model.statement;
 
 import interpreter.exceptions.MyException;
-import interpreter.model.ProgramState;
+import interpreter.model.PrgState;
 import interpreter.model.expression.IExpression;
 
 
 public record PrintStatement(IExpression exp) implements IStatement {
     @Override
-    public ProgramState execute(ProgramState state) throws MyException {
+    public PrgState execute(PrgState state) throws MyException {
         state.getOut().add(exp.eval(state.getSymTable()));
         return state;
     }
