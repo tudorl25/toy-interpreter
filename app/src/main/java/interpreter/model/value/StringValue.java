@@ -11,6 +11,6 @@ public record StringValue(String val) implements IValue {
 
     @Override
     public String toString() {
-        return val;
+        return "\"" + val + "\"";
     }
 }
