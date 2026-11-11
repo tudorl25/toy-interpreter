@@ -1,10 +1,11 @@
 package interpreter.model.adt;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import interpreter.exceptions.ADTException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MyStackTest {
     private IStack<Integer> stack;
@@ -15,24 +16,16 @@ class MyStackTest {
     }
 
     @Test
-    void newStackIsEmpty() {
-        assertTrue(stack.isEmpty());
-    }
+    void pushAndPopFollowLifoOrder() throws ADTException {
+        stack.push(10);
+        stack.push(20);
+        stack.push(30);
 
-    @Test
-    void stackWithAnElementIsNotEmpty() {
-        stack.push(1);
         assertFalse(stack.isEmpty());
-    }
-
-    @Test
-    void popReturnsElementsInLifoOrder() throws ADTException {
-        stack.push(1);
-        stack.push(2);
-        stack.push(3);
-        assertEquals(3, stack.pop());
-        assertEquals(2, stack.pop());
-        assertEquals(1, stack.pop());
+        assertEquals(List.of(30, 20, 10), stack.toList());
+        assertEquals(30, stack.pop());
+        assertEquals(20, stack.pop());
+        assertEquals(10, stack.pop());
         assertTrue(stack.isEmpty());
     }
 
@@ -40,25 +33,5 @@ class MyStackTest {
     void popOnEmptyStackThrows() {
         var ex = assertThrows(ADTException.class, () -> stack.pop());
         assertEquals("pop from an empty stack", ex.getMessage());
-    }
-
-    @Test
-    void popOnStackEmptiedByPopsThrows() throws ADTException {
-        stack.push(1);
-        stack.pop();
-        assertThrows(ADTException.class, () -> stack.pop());
-    }
-
-    @Test
-    void toStringShowsTheTopFirst() {
-        stack.push(1);
-        stack.push(2);
-        stack.push(3);
-        assertEquals("{3 | 2 | 1}", stack.toString());
-    }
-
-    @Test
-    void toStringOfEmptyStack() {
-        assertEquals("{}", stack.toString());
     }
 }

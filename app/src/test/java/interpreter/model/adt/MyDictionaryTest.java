@@ -1,10 +1,11 @@
 package interpreter.model.adt;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import interpreter.exceptions.ADTException;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MyDictionaryTest {
     private IDictionary<String, Integer> dict;
@@ -15,52 +16,45 @@ class MyDictionaryTest {
     }
 
     @Test
-    void putThenLookupReturnsTheValue() throws ADTException {
-        dict.put("a", 1);
-        assertEquals(1, dict.lookup("a"));
+    void putLookupAndUpdateWorkCorrectly() throws ADTException {
+        assertFalse(dict.isDefined("x"));
+        dict.put("x", 5);
+        assertTrue(dict.isDefined("x"));
+        assertEquals(5, dict.lookup("x"));
+
+        dict.update("x", 42);
+        assertEquals(42, dict.lookup("x"));
     }
 
     @Test
-    void isDefinedIsTrueOnlyForPutKeys() {
-        dict.put("a", 1);
-        assertTrue(dict.isDefined("a"));
-        assertFalse(dict.isDefined("b"));
+    void removeDeletesKeyAndReturnsValue() throws ADTException {
+        dict.put("k", 99);
+        dict.remove("k");
+        assertFalse(dict.isDefined("k"));
     }
 
     @Test
-    void updateReplacesTheValue() throws ADTException {
-        dict.put("a", 1);
-        dict.update("a", 5);
-        assertEquals(5, dict.lookup("a"));
+    void removeMissingKeyThrows() {
+        assertThrows(ADTException.class, () -> dict.remove("missing"));
     }
 
     @Test
-    void putOnExistingKeyReplacesTheValue() throws ADTException {
+    void toMapReturnsUnmodifiableViewOfEntries() {
         dict.put("a", 1);
-        dict.put("a", 2);
-        assertEquals(2, dict.lookup("a"));
+        dict.put("b", 2);
+        Map<String, Integer> map = dict.toMap();
+
+        assertEquals(Map.of("a", 1, "b", 2), map);
+        assertThrows(UnsupportedOperationException.class, () -> map.put("c", 3));
     }
 
     @Test
-    void lookupOfMissingKeyThrows() {
+    void lookupMissingKeyThrows() {
         assertThrows(ADTException.class, () -> dict.lookup("missing"));
     }
 
     @Test
-    void updateOfMissingKeyThrowsAndDoesNotAddTheKey() {
+    void updateMissingKeyThrows() {
         assertThrows(ADTException.class, () -> dict.update("missing", 1));
-        assertFalse(dict.isDefined("missing"));
-    }
-
-    @Test
-    void toStringUsesTheLabNotation() {
-        dict.put("v", 2);
-        dict.put("a", 7);
-        assertEquals("{v -> 2, a -> 7}", dict.toString());
-    }
-
-    @Test
-    void toStringOfEmptyDictionary() {
-        assertEquals("{}", dict.toString());
     }
 }

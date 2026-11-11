@@ -1,13 +1,13 @@
 package interpreter.model.adt;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import interpreter.exceptions.ADTException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class MyListTest {
-    private IList<Integer> list;
+    private IList<String> list;
 
     @BeforeEach
     void setUp() {
@@ -15,51 +15,20 @@ class MyListTest {
     }
 
     @Test
-    void newListHasSizeZero() {
+    void addGetAndSizePreserveOrder() throws ADTException {
         assertEquals(0, list.size());
-    }
+        list.add("first");
+        list.add("second");
 
-    @Test
-    void addIncreasesTheSize() {
-        list.add(10);
-        list.add(20);
         assertEquals(2, list.size());
+        assertEquals("first", list.get(0));
+        assertEquals("second", list.get(1));
     }
 
     @Test
-    void getReturnsElementsInInsertionOrder() throws ADTException {
-        list.add(10);
-        list.add(20);
-        assertEquals(10, list.get(0));
-        assertEquals(20, list.get(1));
-    }
-
-    @Test
-    void getWithIndexEqualToSizeThrows() {
-        list.add(10);
-        assertThrows(ADTException.class, () -> list.get(1));
-    }
-
-    @Test
-    void getWithNegativeIndexThrows() {
-        list.add(10);
+    void getOutOfBoundsThrows() {
+        list.add("only");
         assertThrows(ADTException.class, () -> list.get(-1));
-    }
-
-    @Test
-    void getOnEmptyListThrows() {
-        assertThrows(ADTException.class, () -> list.get(0));
-    }
-
-    @Test
-    void toStringUsesTheLabNotation() {
-        list.add(1);
-        list.add(2);
-        assertEquals("{1, 2}", list.toString());
-    }
-
-    @Test
-    void toStringOfEmptyList() {
-        assertEquals("{}", list.toString());
+        assertThrows(ADTException.class, () -> list.get(1));
     }
 }

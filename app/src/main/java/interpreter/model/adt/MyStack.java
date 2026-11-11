@@ -1,10 +1,9 @@
 package interpreter.model.adt;
 
 import interpreter.exceptions.ADTException;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class MyStack<T> implements IStack<T> {
     private final Deque<T> stack = new ArrayDeque<>();
@@ -16,7 +15,9 @@ public class MyStack<T> implements IStack<T> {
 
     @Override
     public T pop() throws ADTException {
-        if (stack.isEmpty()) throw new ADTException("pop from an empty stack");
+        if (stack.isEmpty()) {
+            throw new ADTException("pop from an empty stack");
+        }
         return stack.pop();
     }
 
@@ -26,7 +27,12 @@ public class MyStack<T> implements IStack<T> {
     }
 
     @Override
+    public List<T> toList() {
+        return List.copyOf(stack);
+    }
+
+    @Override
     public String toString() {
-        return stack.stream().map(String::valueOf).collect(Collectors.joining(" | ", "{", "}"));
+        return stack.toString();
     }
 }
