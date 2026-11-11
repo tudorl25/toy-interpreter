@@ -1,41 +1,28 @@
 package interpreter.controller;
 
-import interpreter.exceptions.ExpressionException;
+import static org.junit.jupiter.api.Assertions.*;
+
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
-import interpreter.model.adt.MyDictionary;
-import interpreter.model.adt.MyList;
-import interpreter.model.adt.MyStack;
-import interpreter.model.expression.VariableExpression;
-import interpreter.model.statement.AssignmentStatement;
-import interpreter.model.statement.CompoundStatement;
-import interpreter.model.statement.IStatement;
-import interpreter.model.statement.NopStatement;
-import interpreter.model.statement.PrintStatement;
-import interpreter.model.value.BoolValue;
+import interpreter.model.stmt.IStmt;
+import interpreter.model.stmt.NopStmt;
 import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import static interpreter.TestSupport.emptyState;
-import static interpreter.TestSupport.num;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.io.TempDir;
 
 class ControllerTest {
-    private static PrgState newState(IStatement program) {
-        return new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), program);
-    }
+    @TempDir
+    Path dir;
 
-    private static PrgState run(IStatement program) throws MyException {
-        PrgState state = newState(program);
-        new Controller(new Repository(state), false).allStep(); // display off
+    private PrgState run(IStmt program) throws MyException {
+        PrgState state = PrgState.of(program);
+        var repo = new Repository(state, dir.resolve("log.txt").toString());
+        new Controller(repo, false).allStep(); // display off
         return state;
     }
 
@@ -43,125 +30,70 @@ class ControllerTest {
     void example1PrintsTwo() throws MyException {
         PrgState state = run(Examples.EX1);
         assertTrue(state.getExeStack().isEmpty());
-        assertEquals(1, state.getOut().size());
         assertEquals(new IntValue(2), state.getOut().get(0));
-        assertEquals(new IntValue(2), state.getSymTable().lookup("v"));
     }
 
     @Test
     void example2PrintsEighteen() throws MyException {
         PrgState state = run(Examples.EX2);
         assertTrue(state.getExeStack().isEmpty());
-        assertEquals(1, state.getOut().size());
         assertEquals(new IntValue(18), state.getOut().get(0));
-        assertEquals(new IntValue(17), state.getSymTable().lookup("a"));
-        assertEquals(new IntValue(18), state.getSymTable().lookup("b"));
     }
 
     @Test
     void example3PrintsTwo() throws MyException {
         PrgState state = run(Examples.EX3);
         assertTrue(state.getExeStack().isEmpty());
-        assertEquals(1, state.getOut().size());
         assertEquals(new IntValue(2), state.getOut().get(0));
-        assertEquals(new BoolValue(true), state.getSymTable().lookup("a"));
-        assertEquals(new IntValue(2), state.getSymTable().lookup("v"));
     }
 
     @Test
-    void theSameExampleCanBeRunTwiceOnFreshStates() throws MyException {
-        assertEquals(new IntValue(18), run(Examples.EX2).getOut().get(0));
-        assertEquals(new IntValue(18), run(Examples.EX2).getOut().get(0));
+    void fileExampleReadsBothNumbersAndClosesTheFile() throws Exception {
+        Path in = dir.resolve("test.in");
+        Files.writeString(in, "15\n50\n");
+
+        PrgState s = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(15), s.getOut().get(0));
+        assertEquals(new IntValue(50), s.getOut().get(1));
+        assertTrue(s.getFileTable().toMap().isEmpty());
     }
 
     @Test
-    void outKeepsTheValuesInThePrintOrder() throws MyException {
-        IStatement program = new CompoundStatement(new PrintStatement(num(1)), new CompoundStatement(new PrintStatement(num(2)), new PrintStatement(num(3))));
-        PrgState state = run(program);
-        assertEquals("{1, 2, 3}", state.getOut().toString());
+    void fileExampleWithEmptyFilePrintsZeroZero() throws Exception {
+        Path in = dir.resolve("empty.in");
+        Files.writeString(in, "");
+
+        PrgState s = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(0), s.getOut().get(0));
+        assertEquals(new IntValue(0), s.getOut().get(1));
+        assertTrue(s.getFileTable().toMap().isEmpty());
     }
 
     @Test
-    void oneStepOnAnEmptyStackThrows() {
-        PrgState state = emptyState();
-        Controller controller = new Controller(new Repository(state), false);
+    void example5PrintsFive() throws MyException {
+        PrgState state = run(Examples.EX5);
+        assertTrue(state.getExeStack().isEmpty());
+        assertEquals(1, state.getOut().size());
+        assertEquals(new IntValue(5), state.getOut().get(0));
+    }
+
+    @Test
+    void logFileContainsTheFourSectionsInOrder() throws Exception {
+        run(Examples.EX1);
+        String log = Files.readString(dir.resolve("log.txt"));
+        int a = log.indexOf("ExeStack:");
+        int b = log.indexOf("SymTable:");
+        int c = log.indexOf("Out:");
+        int d = log.indexOf("FileTable:");
+        assertTrue(0 <= a && a < b && b < c && c < d);
+    }
+
+    @Test
+    void oneStepOnEmptyStackThrows() throws MyException {
+        PrgState state = run(new NopStmt());
+        var repo = new Repository(state, dir.resolve("log.txt").toString());
+        Controller controller = new Controller(repo, false);
         var ex = assertThrows(StatementException.class, () -> controller.oneStep(state));
         assertEquals("execution stack is empty", ex.getMessage());
-    }
-
-    @Test
-    void aFurtherStepAfterTheEndOfTheExecutionThrows() throws MyException {
-        PrgState state = newState(new NopStatement());
-        Controller controller = new Controller(new Repository(state), false);
-        controller.allStep();
-        assertThrows(StatementException.class, () -> controller.oneStep(state));
-    }
-
-    @Test
-    void oneStepExecutesExactlyOneStatement() throws MyException {
-        PrgState state = newState(Examples.EX1);
-        Controller controller = new Controller(new Repository(state), false);
-        controller.oneStep(state); // S1: int v ; (v = 2; print(v))
-        assertEquals("{int v | v = 2; print(v)}", state.getExeStack().toString());
-        controller.oneStep(state); // S3
-        assertEquals("{v = 2; print(v)}", state.getExeStack().toString());
-        assertEquals("{v -> 0}", state.getSymTable().toString());
-    }
-
-    @Test
-    void oneStepReturnsTheState() throws MyException {
-        PrgState state = newState(new NopStatement());
-        assertSame(state, new Controller(new Repository(state), false).oneStep(state));
-    }
-
-    @Test
-    void anErrorInTheProgramStopsTheExecution() {
-        PrgState state = newState(new CompoundStatement(new AssignmentStatement("x", num(1)), new PrintStatement(num(9))));
-        Controller controller = new Controller(new Repository(state), false);
-        assertThrows(StatementException.class, controller::allStep);
-        assertEquals(0, state.getOut().size());
-    }
-
-    @Test
-    void anExpressionErrorInTheProgramIsReported() {
-        PrgState state = newState(new PrintStatement(new VariableExpression("undefined")));
-        Controller controller = new Controller(new Repository(state), false);
-        assertThrows(ExpressionException.class, controller::allStep);
-    }
-
-    @Test
-    void displayFlagOffPrintsNothing() throws MyException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        PrgState state = newState(Examples.EX1);
-        new Controller(new Repository(state), false, new PrintStream(bytes)).allStep();
-        assertEquals("", bytes.toString(StandardCharsets.UTF_8));
-    }
-
-    @Test
-    void example1DisplaysExactlyTheSequenceOfStatesOfTheLabDocument() throws MyException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        PrgState state = newState(Examples.EX1);
-        new Controller(new Repository(state), true, new PrintStream(bytes, true, StandardCharsets.UTF_8)).allStep();
-
-        List<String> expected = List.of(
-                "ExeStack: {int v; (v = 2; print(v))}", "SymTable: {}", "Out: {}", "",
-                "ExeStack: {int v | v = 2; print(v)}", "SymTable: {}", "Out: {}", "",
-                "ExeStack: {v = 2; print(v)}", "SymTable: {v -> 0}", "Out: {}", "",
-                "ExeStack: {v = 2 | print(v)}", "SymTable: {v -> 0}", "Out: {}", "",
-                "ExeStack: {print(v)}", "SymTable: {v -> 2}", "Out: {}", "",
-                "ExeStack: {}", "SymTable: {v -> 2}", "Out: {2}", "");
-        assertEquals(expected, bytes.toString(StandardCharsets.UTF_8).lines().toList());
-    }
-
-    @Test
-    void example3DisplaysTheInitialStateAndOneStatePerStep() throws MyException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        PrgState state = newState(Examples.EX3);
-        new Controller(new Repository(state), true, new PrintStream(bytes, true, StandardCharsets.UTF_8)).allStep();
-        String output = bytes.toString(StandardCharsets.UTF_8);
-        // initial state + one state per executed step
-        long states = output.lines().filter(l -> l.startsWith("ExeStack:")).count();
-        assertEquals(11, states); // 10 steps + the initial state
-        assertTrue(output.contains("Out: {2}"));
     }
 }

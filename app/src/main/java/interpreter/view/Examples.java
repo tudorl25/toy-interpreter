@@ -1,53 +1,99 @@
 package interpreter.view;
 
-import interpreter.model.expression.ArithmeticExpression;
-import interpreter.model.expression.ArithmeticOperand;
-import interpreter.model.expression.ValueExpression;
-import interpreter.model.expression.VariableExpression;
-import interpreter.model.statement.AssignmentStatement;
-import interpreter.model.statement.CompoundStatement;
-import interpreter.model.statement.IStatement;
-import interpreter.model.statement.IfStatement;
-import interpreter.model.statement.PrintStatement;
-import interpreter.model.statement.VarDeclStmt;
-import interpreter.model.type.BoolType;
-import interpreter.model.type.IntType;
-import interpreter.model.value.BoolValue;
-import interpreter.model.value.IntValue;
-
+import interpreter.model.exp.*;
+import interpreter.model.stmt.*;
+import interpreter.model.type.*;
+import interpreter.model.value.*;
 import java.util.List;
 
 public final class Examples {
-    private Examples() {
+    private Examples() {}
+
+    // Ex1: int v; v = 2; print(v)
+    public static final IStmt EX1 = new CompStmt(
+            new VarDeclStmt("v", new IntType()),
+            new CompStmt(
+                    new AssignStmt("v", new ValueExp(new IntValue(2))),
+                    new PrintStmt(new VarExp("v"))
+            )
+    );
+
+    // Ex2: int a; int b; a = 2 + 3 * 5; b = a + 1; print(b)
+    public static final IStmt EX2 = new CompStmt(
+            new VarDeclStmt("a", new IntType()),
+            new CompStmt(
+                    new VarDeclStmt("b", new IntType()),
+                    new CompStmt(
+                            new AssignStmt("a",
+                                    new ArithExp(ArithOp.ADD,
+                                            new ValueExp(new IntValue(2)),
+                                            new ArithExp(ArithOp.MUL,
+                                                    new ValueExp(new IntValue(3)),
+                                                    new ValueExp(new IntValue(5))))),
+                            new CompStmt(
+                                    new AssignStmt("b",
+                                            new ArithExp(ArithOp.ADD,
+                                                    new VarExp("a"),
+                                                    new ValueExp(new IntValue(1)))),
+                                    new PrintStmt(new VarExp("b"))
+                            )
+                    )
+            )
+    );
+
+    // Ex3: bool a; int v; a = true; (if a then v = 2 else v = 3); print(v)
+    public static final IStmt EX3 = new CompStmt(
+            new VarDeclStmt("a", new BoolType()),
+            new CompStmt(
+                    new VarDeclStmt("v", new IntType()),
+                    new CompStmt(
+                            new AssignStmt("a", new ValueExp(new BoolValue(true))),
+                            new CompStmt(
+                                    new IfStmt(new VarExp("a"),
+                                            new AssignStmt("v", new ValueExp(new IntValue(2))),
+                                            new AssignStmt("v", new ValueExp(new IntValue(3)))),
+                                    new PrintStmt(new VarExp("v"))
+                            )
+                    )
+            )
+    );
+
+    // Ex4: string varf; varf = fileName; openRFile(varf); int varc;
+    //      readFile(varf, varc); print(varc); readFile(varf, varc); print(varc); closeRFile(varf)
+    public static IStmt fileExample(String fileName) {
+        return new CompStmt(new VarDeclStmt("varf", new StringType()),
+                new CompStmt(new AssignStmt("varf", new ValueExp(new StringValue(fileName))),
+                        new CompStmt(new OpenRFileStmt(new VarExp("varf")),
+                                new CompStmt(new VarDeclStmt("varc", new IntType()),
+                                        new CompStmt(new ReadFileStmt(new VarExp("varf"), "varc"),
+                                                new CompStmt(new PrintStmt(new VarExp("varc")),
+                                                        new CompStmt(new ReadFileStmt(new VarExp("varf"), "varc"),
+                                                                new CompStmt(new PrintStmt(new VarExp("varc")),
+                                                                        new CloseRFileStmt(new VarExp("varf"))))))))));
     }
 
-    
-    public static final IStatement EX1 = new CompoundStatement(new VarDeclStmt("v", new IntType()),
-            new CompoundStatement(new AssignmentStatement("v", new ValueExpression(new IntValue(2))),
-                    new PrintStatement(new VariableExpression("v"))));
+    public static final IStmt EX4 = fileExample("test.in");
 
-    
-    public static final IStatement EX2 = new CompoundStatement(new VarDeclStmt("a", new IntType()),
-            new CompoundStatement(new VarDeclStmt("b", new IntType()),
-                    new CompoundStatement(new AssignmentStatement("a",
-                            new ArithmeticExpression(ArithmeticOperand.ADD, new ValueExpression(new IntValue(2)),
-                                    new ArithmeticExpression(ArithmeticOperand.MUL, new ValueExpression(new IntValue(3)),
-                                            new ValueExpression(new IntValue(5))))),
-                            new CompoundStatement(new AssignmentStatement("b",
-                                    new ArithmeticExpression(ArithmeticOperand.ADD, new VariableExpression("a"),
-                                            new ValueExpression(new IntValue(1)))),
-                                    new PrintStatement(new VariableExpression("b"))))));
+    // Ex5: int a; int b; a = 5; b = 7; (if a < b then print(a) else print(b))
+    public static final IStmt EX5 = new CompStmt(
+            new VarDeclStmt("a", new IntType()),
+            new CompStmt(
+                    new VarDeclStmt("b", new IntType()),
+                    new CompStmt(
+                            new AssignStmt("a", new ValueExp(new IntValue(5))),
+                            new CompStmt(
+                                    new AssignStmt("b", new ValueExp(new IntValue(7))),
+                                    new IfStmt(
+                                            new RelationalExp(RelOp.LT, new VarExp("a"), new VarExp("b")),
+                                            new PrintStmt(new VarExp("a")),
+                                            new PrintStmt(new VarExp("b"))
+                                    )
+                            )
+                    )
+            )
+    );
 
-    
-    public static final IStatement EX3 = new CompoundStatement(new VarDeclStmt("a", new BoolType()),
-            new CompoundStatement(new VarDeclStmt("v", new IntType()),
-                    new CompoundStatement(new AssignmentStatement("a", new ValueExpression(new BoolValue(true))),
-                            new CompoundStatement(new IfStatement(new VariableExpression("a"),
-                                    new AssignmentStatement("v", new ValueExpression(new IntValue(2))),
-                                    new AssignmentStatement("v", new ValueExpression(new IntValue(3)))),
-                                    new PrintStatement(new VariableExpression("v"))))));
-
-    public static List<IStatement> all() {
-        return List.of(EX1, EX2, EX3);
+    public static List<IStmt> all() {
+        return List.of(EX1, EX2, EX3, EX4, EX5);
     }
 }

@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public record ReadFileStmt(IExp exp, String varName) implements IStmt {
     @Override
-    public PrgState execute(PrgState state) throws MyException { // S9
+    public PrgState execute(PrgState state) throws MyException {
         var symTable = state.getSymTable();
         if (!symTable.isDefined(varName)) {
             throw new StatementException("readFile: variable " + varName + " is not declared");
