@@ -6,7 +6,6 @@ import interpreter.model.PrgState;
 import interpreter.model.stmt.IStmt;
 import interpreter.repository.IRepository;
 
-//idk
 public class Controller {
     private final IRepository repo;
     private boolean displayFlag;
@@ -43,6 +42,10 @@ public class Controller {
         display(prg);
         while (!prg.getExeStack().isEmpty()) {
             oneStep(prg);
+            repo.logPrgStateExec();
+            prg.getHeap().setContent(GarbageCollector.safeGarbageCollector(
+                    GarbageCollector.getAddrFromSymTable(prg.getSymTable().toMap().values()),
+                    prg.getHeap().getContent()));
             repo.logPrgStateExec();
             display(prg);
         }
