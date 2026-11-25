@@ -8,13 +8,12 @@ import org.junit.jupiter.api.Test;
 
 class ExamplesTest {
     @Test
-    void allReturnsFiveExamplesInOrder() {
+    void allReturnsTenExamplesInOrder() {
         List<IStmt> examples = Examples.all();
-        assertEquals(5, examples.size());
+        assertEquals(10, examples.size());
         assertSame(Examples.EX1, examples.get(0));
-        assertSame(Examples.EX2, examples.get(1));
-        assertSame(Examples.EX3, examples.get(2));
-        assertSame(Examples.EX4, examples.get(3));
-        assertSame(Examples.EX5, examples.get(4));
+        assertSame(Examples.EX6, examples.get(5));
+        assertSame(Examples.EX9, examples.get(8));
+        assertSame(Examples.EX10, examples.get(9));
     }
 }

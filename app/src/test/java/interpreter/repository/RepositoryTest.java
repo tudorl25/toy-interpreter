@@ -2,7 +2,6 @@ package interpreter.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import interpreter.exceptions.MyException;
 import interpreter.model.PrgState;
 import interpreter.view.Examples;
 import java.nio.file.Files;
@@ -15,9 +14,9 @@ class RepositoryTest {
     Path dir;
 
     @Test
-    void getCrtPrgAndLogPrgStateExecWorkCorrectly() throws Exception {
+    void getCrtPrgAndLogPrgStateExecIncludeHeapSection() throws Exception {
         Path logPath = dir.resolve("repo-log.txt");
-        PrgState state = PrgState.of(Examples.EX1);
+        PrgState state = PrgState.of(Examples.EX6);
         IRepository repo = new Repository(state, logPath.toString());
 
         assertSame(state, repo.getCrtPrg());
@@ -28,5 +27,6 @@ class RepositoryTest {
         assertTrue(content.contains("SymTable:"));
         assertTrue(content.contains("Out:"));
         assertTrue(content.contains("FileTable:"));
+        assertTrue(content.contains("Heap:"));
     }
 }
